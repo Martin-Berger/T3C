@@ -5,9 +5,7 @@ library(SnowballC)
 library(wordcloud)
 library(data.table)
 library(RColorBrewer)
-library(glmnet)
-library(doMC)
-registerDoMC(cores=4)
+library(LiblineaR)
 
 data_set <- read.csv("DATA/train.csv")
 
