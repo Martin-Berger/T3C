@@ -5,7 +5,9 @@ library(SnowballC)
 library(wordcloud)
 library(data.table)
 library(RColorBrewer)
-library(LiblineaR)
+library(glmnet)
+library(doMC)
+registerDoMC(cores=4)
 
 data_set <- read.csv("DATA/train.csv")
 
@@ -47,8 +49,15 @@ inspect(documentTermMatrixClean)
 documentTermMatrixClean <- removeSparseTerms(documentTermMatrixClean, 0.99)
 inspect(documentTermMatrixClean)
 
-
+docs_test <- Corpus(VectorSource(test$comment_text))
+cleanDocsTest <- basic_text_cleaner(docs_test)
+documentTermMatrixTestClean <- DocumentTermMatrix(cleanDocsTest, control = list(weighting = weightTfIdf))
 
 ##########################SPARSE LOGISTIC REGRESSION 
-targets <- train[,-1:-2]
-model = LiblineaR(data = as.matrix(documentTermMatrixClean), target = targets, type = 0, bias = TRUE, verbose = FALSE)
+category <- c("toxic", "severe_toxic", "obscene", "threat", "insult", "identity_hate")
+for(i in 1:length(category)){
+  print(category[i])
+  model = LiblineaR(data = as.matrix(documentTermMatrixClean), target = train[category[i]], type = 7, bias = TRUE, verbose = FALSE)
+  #predict prob that observation belong to the class (closest to 1 as possible)
+  p = predict(m, as.matrix(documentTermMatrixTestClean), proba = TRUE, decisionValues = TRUE)$probabilities[,"1"]
+}
