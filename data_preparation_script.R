@@ -52,10 +52,14 @@ cleanDocsTest <- basic_text_cleaner(docs_test)
 documentTermMatrixTestClean <- DocumentTermMatrix(cleanDocsTest, control = list(weighting = weightTfIdf))
 
 ##########################SPARSE LOGISTIC REGRESSION 
+results <- data.frame(id = test$id)
 category <- c("toxic", "severe_toxic", "obscene", "threat", "insult", "identity_hate")
+
 for(i in 1:length(category)){
   print(category[i])
-  model = LiblineaR(data = as.matrix(documentTermMatrixClean), target = train[category[i]], type = 7, bias = TRUE, verbose = FALSE)
+  model <- LiblineaR(data = as.matrix(documentTermMatrixClean), target = train[category[i]], type = 7, bias = TRUE, verbose = FALSE)
+  
   #predict prob that observation belong to the class (closest to 1 as possible)
-  p = predict(m, as.matrix(documentTermMatrixTestClean), proba = TRUE, decisionValues = TRUE)$probabilities[,"1"]
+  p <- predict(model, as.matrix(documentTermMatrixTestClean), proba = TRUE, decisionValues = TRUE)$probabilities[,"1"]
+  results[, category[i]] <- p
 }
