@@ -131,9 +131,6 @@ identity_hate_freq <- colSums(identity_hate_matrix)
 wordcloud(names(identity_hate_freq ), identity_hate_freq , max.words=100, rot.per=0.2, colors=brewer.pal(6, "Dark2"))
 
 #Size of the vocab for each label. 
-#labels <- c("Toxic","Severe Toxic", "Obscene","Threat", "Insult", "Identity Hate","Clean")
-#values <- c(length(toxic_freq),length(severe_toxic_freq),length(obscene_freq), length(threat_freq), length(insult_freq),length(identity_hate_freq),length(clean_freq))
-
 labels <- c("Toxic","Severe Toxic", "Obscene","Threat", "Insult", "Identity Hate")
 values <- c(length(toxic_freq),length(severe_toxic_freq),length(obscene_freq), length(threat_freq), length(insult_freq),length(identity_hate_freq))
 
